@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>成語闖關大冒險｜第十一課 豆粥婆婆</title>
+<style>
+  :root{
+    --bg:#fff8ec; --card:#ffffff; --ink:#3b2f2a; --sub:#8a7a70;
+    --pri:#ff8a3d; --pri2:#ffb347; --ok:#3cb371; --bad:#ef5350; --blue:#4a90e2; --line:#f0dcc4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink);
+    background-image:radial-gradient(#ffe2bf 1.5px,transparent 1.5px);background-size:24px 24px;min-height:100vh}
+  header{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+  header h1{margin:0;font-size:26px;letter-spacing:2px}
+  header .tag{background:rgba(255,255,255,.25);padding:3px 10px;border-radius:20px;font-size:15px}
+  header{flex-wrap:wrap}
+  header h1,header .tag,header button{white-space:nowrap}
+  header .sp{flex:1}
+  header button{background:#fff;color:var(--pri);border:0;border-radius:20px;padding:7px 16px;font-size:16px;font-weight:bold;cursor:pointer}
+  main{max-width:980px;margin:0 auto;padding:20px}
+  .hidden{display:none!important}
+  /* 選單 */
+  .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+  .mbtn{background:var(--card);border:3px solid var(--line);border-radius:20px;padding:18px;text-align:left;cursor:pointer;font-family:inherit;transition:.15s;position:relative}
+  .mbtn:hover{transform:translateY(-3px);border-color:var(--pri);box-shadow:0 6px 14px rgba(255,138,61,.2)}
+  .mbtn .ic{font-size:38px}
+  .mbtn h3{margin:6px 0 4px;font-size:22px;color:var(--ink)}
+  .mbtn p{margin:0;color:var(--sub);font-size:15px;line-height:1.5}
+  .mbtn .best{position:absolute;top:14px;right:16px;font-size:18px;letter-spacing:1px}
+  .mbtn.big{grid-column:1/-1;background:linear-gradient(135deg,#fff3e0,#ffe0b2);border-color:var(--pri2)}
+  .intro{background:var(--card);border-radius:18px;padding:14px 20px;margin-bottom:18px;border:2px dashed var(--line);font-size:17px;line-height:1.7}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .chip{background:#fff1e0;border-radius:14px;padding:3px 12px;font-weight:bold;font-size:18px}
+  /* 遊戲區 */
+  .bar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .bar h2{margin:0;font-size:24px}
+  .bar .sp{flex:1}
+  .pill{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:5px 14px;font-size:17px;font-weight:bold}
+  .back{background:#fff;border:2px solid var(--line);border-radius:20px;padding:6px 14px;font-size:16px;cursor:pointer;font-family:inherit}
+  .prog{height:12px;background:#f3e3cf;border-radius:8px;overflow:hidden;margin-bottom:18px}
+  .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:.3s}
+  .qcard{background:var(--card);border-radius:22px;padding:26px;box-shadow:0 4px 16px rgba(0,0,0,.06);border:2px solid var(--line)}
+  .qtype{display:inline-block;background:#e8f2ff;color:var(--blue);border-radius:12px;padding:3px 12px;font-size:15px;font-weight:bold;margin-bottom:10px}
+  .qtext{font-size:28px;line-height:1.7;margin:4px 0 20px;font-weight:bold}
+  .qtext .blank{display:inline-block;min-width:150px;border-bottom:4px solid var(--pri);text-align:center;color:var(--pri)}
+  .qtext .hl{color:var(--pri)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .opt{font-family:inherit;font-size:26px;padding:16px 10px;border-radius:16px;border:3px solid var(--line);background:#fffdf9;cursor:pointer;font-weight:bold;color:var(--ink);transition:.12s}
+  .opt:hover:not(:disabled){border-color:var(--pri);background:#fff4e8}
+  .opt.ok{background:#e6f7ec;border-color:var(--ok);color:#1d7a46}
+  .opt.bad{background:#fdecec;border-color:var(--bad);color:#b02a2a}
+  .opt:disabled{cursor:default}
+  .fb{margin-top:18px;padding:14px 18px;border-radius:14px;font-size:19px;line-height:1.7}
+  .fb.ok{background:#e6f7ec}
+  .fb.bad{background:#fdecec}
+  .next{margin-top:16px;font-family:inherit;font-size:22px;padding:10px 34px;border:0;border-radius:30px;background:var(--pri);color:#fff;font-weight:bold;cursor:pointer;float:right}
+  .clear{clear:both}
+  /* 學習卡 */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+  .fcard{perspective:1000px;height:300px;cursor:pointer}
+  .fin{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .fcard.flip .fin{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:18px;border:3px solid var(--line);background:var(--card);display:flex;flex-direction:column}
+  .face.front{align-items:center;justify-content:center;background:linear-gradient(160deg,#fff,#fff3e3)}
+  .face.back{transform:rotateY(180deg);font-size:17px;line-height:1.6;overflow:auto}
+  .idiom{font-size:46px;font-weight:bold;letter-spacing:6px}
+  .zy{color:var(--sub);font-size:17px;margin-top:6px}
+  .face.back b{color:var(--pri)}
+  .say{margin-top:12px;border:0;background:#e8f2ff;color:var(--blue);border-radius:16px;padding:5px 14px;font-size:16px;cursor:pointer;font-family:inherit}
+  .tagn{display:inline-block;border-radius:6px;padding:0 6px;color:#fff;font-size:14px;margin-right:4px}
+  .tagn.n{background:var(--blue)} .tagn.f{background:var(--bad)}
+  /* 配對 */
+  .match{display:grid;grid-template-columns:1fr 1.6fr;gap:14px}
+  .col{display:flex;flex-direction:column;gap:12px}
+  .mc{font-family:inherit;border:3px solid var(--line);background:var(--card);border-radius:16px;padding:14px;cursor:pointer;text-align:left;color:var(--ink);transition:.12s;min-height:66px}
+  .mc.L{font-size:28px;font-weight:bold;text-align:center;letter-spacing:3px}
+  .mc.R{font-size:19px;line-height:1.5}
+  .mc.sel{border-color:var(--blue);background:#eaf3ff}
+  .mc.done{border-color:var(--ok);background:#e6f7ec;opacity:.6;cursor:default}
+  .mc.wrong{animation:shake .4s;border-color:var(--bad)}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  /* 排序 */
+  .slots{display:flex;gap:12px;justify-content:center;margin:10px 0 24px}
+  .slot{width:78px;height:78px;border:3px dashed var(--pri2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;background:#fffaf2;cursor:pointer}
+  .slot.ok{border:3px solid var(--ok);background:#e6f7ec}
+  .slot.bad{border:3px solid var(--bad);background:#fdecec}
+  .tiles{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .tile{width:78px;height:78px;font-size:42px;font-weight:bold;font-family:inherit;border-radius:14px;border:3px solid var(--line);background:#fff;cursor:pointer;color:var(--ink);box-shadow:0 3px 0 var(--line)}
+  .tile:disabled{opacity:.25;cursor:default}
+  .center{text-align:center}
+  /* 結果 */
+  .result{text-align:center;padding:30px}
+  .result .stars{font-size:64px;letter-spacing:8px}
+  .result h2{font-size:32px;margin:10px 0}
+  .result p{font-size:20px;color:var(--sub)}
+  .rbtns{display:flex;gap:14px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+  .rbtns button{font-family:inherit;font-size:20px;padding:10px 26px;border-radius:26px;border:0;cursor:pointer;font-weight:bold}
+  .rbtns .a{background:var(--pri);color:#fff} .rbtns .b{background:#fff;border:2px solid var(--line);color:var(--ink)}
+  .review{text-align:left;max-width:640px;margin:20px auto 0;background:#fff;border-radius:16px;padding:14px 20px;border:2px solid var(--line);font-size:17px;line-height:1.7}
+  .confetti{position:fixed;top:-20px;font-size:26px;pointer-events:none;animation:fall linear forwards;z-index:99}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+  @media (max-width:640px){.opts{grid-template-columns:1fr}.match{grid-template-columns:1fr}.qtext{font-size:22px}.slot,.tile{width:62px;height:62px;font-size:34px}header h1{font-size:20px}}
+</style>
+</head>
+<body>
+<header>
+  <span style="font-size:34px">🐉</span>
+  <h1>成語闖關大冒險</h1>
+  <span class="tag">第十一課　豆粥婆婆</span>
+  <span class="sp"></span>
+  <button id="soundBtn" onclick="toggleSound()">🔊 音效開</button>
+  <button onclick="goMenu()">🏠 回選單</button>
+</header>
+<main id="app"></main>
+
+<script>
+const LESSON_ID = "L11";
+const LESSONS = [{"id":"L8","short":"第八課","file":"index.html"},{"id":"L9","short":"第九課","file":"L9.html"},{"id":"L10","short":"第十課","file":"L10.html"},{"id":"L11","short":"第十一課","file":"L11.html"},{"id":"L12","short":"第十二課","file":"L12.html"}];
+const IDIOMS = [
+ {
+  "w": "陽奉陰違",
+  "zy": "ㄧㄤˊ ㄈㄥˋ ㄧㄣ ㄨㄟˊ",
+  "m": "表面遵守奉行，實際上卻違反不照辦。",
+  "near": "口是心非",
+  "anti": "表裡如一",
+  "ex": "教練希望隊員把握時間確實練習，不要陽奉陰違。"
+ },
+ {
+  "w": "嘔心瀝血",
+  "zy": "ㄡˇ ㄒㄧㄣ ㄌㄧˋ ㄒㄧㄝˇ",
+  "m": "比喻費盡心思，用盡心血。",
+  "near": "苦心孤詣",
+  "anti": "敷衍了事",
+  "ex": "這部小說是她的嘔心瀝血之作，曾被改編成電影。"
+ },
+ {
+  "w": "哀鴻遍野",
+  "zy": "ㄞ ㄏㄨㄥˊ ㄅㄧㄢˋ ㄧㄝˇ",
+  "m": "比喻到處都是四處離散、失去家園的難民。",
+  "near": "生靈塗炭",
+  "anti": "國泰民安",
+  "ex": "疫情大流行，讓世界許多地區哀鴻遍野。"
+ },
+ {
+  "w": "臥薪嘗膽",
+  "zy": "ㄨㄛˋ ㄒㄧㄣ ㄔㄤˊ ㄉㄢˇ",
+  "m": "比喻刻苦自勵，奮發圖強。",
+  "near": "",
+  "anti": "苟且偷生",
+  "ex": "只要有「臥薪嘗膽」的精神，就算身處逆境，也有成功的希望。"
+ },
+ {
+  "w": "痛定思痛",
+  "zy": "ㄊㄨㄥˋ ㄉㄧㄥˋ ㄙ ㄊㄨㄥˋ",
+  "m": "比喻吸取慘痛教訓，警惕未來。",
+  "near": "",
+  "anti": "重蹈覆轍",
+  "ex": "這次比賽我們慘敗，若能痛定思痛，認真找出原因，下次一定可以奪冠。"
+ }
+];
+const W = IDIOMS.map(x=>x.w);
+const byW = w => IDIOMS.find(x=>x.w===w);
+const FILL = [...IDIOMS.map(x=>({a:x.w, s:x.ex, src:"課本例句"})), ...[{"a":"陽奉陰違","s":"他當著老師的面說會打掃，老師一走就溜去玩，真是陽奉陰違。"},{"a":"嘔心瀝血","s":"這幅畫是畫家嘔心瀝血，花了三年才完成的作品。"},{"a":"哀鴻遍野","s":"大地震過後，災區房屋倒塌，到處哀鴻遍野。"},{"a":"臥薪嘗膽","s":"去年輸掉比賽後，球隊臥薪嘗膽，每天加緊練習，今年終於奪冠。"},{"a":"痛定思痛","s":"上次因為粗心考不好，他痛定思痛，現在寫完考卷都會仔細檢查。"}].map(f=>({...f, src:"新例句"}))];
+const CHARQ = [{"w":"陽奉陰違","i":1,"opts":["奉","俸","捧","鳳"]},{"w":"陽奉陰違","i":2,"opts":["陰","隱","因","蔭"]},{"w":"陽奉陰違","i":3,"opts":["違","圍","偉","為"]},{"w":"嘔心瀝血","i":0,"opts":["嘔","歐","毆","偶"]},{"w":"嘔心瀝血","i":2,"opts":["瀝","歷","曆","力"]},{"w":"哀鴻遍野","i":0,"opts":["哀","衰","哎","衷"]},{"w":"哀鴻遍野","i":2,"opts":["遍","偏","篇","編"]},{"w":"臥薪嘗膽","i":1,"opts":["薪","新","辛","欣"]},{"w":"臥薪嘗膽","i":2,"opts":["嘗","常","賞","當"]},{"w":"臥薪嘗膽","i":3,"opts":["膽","擔","瞻","但"]},{"w":"痛定思痛","i":1,"opts":["定","訂","頂","錠"]}];
+const SYN = [{"q":"陽奉陰違","t":"近","a":"口是心非","o":["口是心非","表裡如一","國泰民安","苦心孤詣"]},{"q":"陽奉陰違","t":"反","a":"表裡如一","o":["表裡如一","口是心非","生靈塗炭","重蹈覆轍"]},{"q":"嘔心瀝血","t":"近","a":"苦心孤詣","o":["苦心孤詣","敷衍了事","口是心非","國泰民安"]},{"q":"嘔心瀝血","t":"反","a":"敷衍了事","o":["敷衍了事","苦心孤詣","生靈塗炭","表裡如一"]},{"q":"哀鴻遍野","t":"近","a":"生靈塗炭","o":["生靈塗炭","國泰民安","表裡如一","苦心孤詣"]},{"q":"哀鴻遍野","t":"反","a":"國泰民安","o":["國泰民安","生靈塗炭","敷衍了事","重蹈覆轍"]},{"q":"臥薪嘗膽","t":"反","a":"苟且偷生","o":["苟且偷生","口是心非","國泰民安","生靈塗炭"]},{"q":"痛定思痛","t":"反","a":"重蹈覆轍","o":["重蹈覆轍","苦心孤詣","表裡如一","國泰民安"]}];
+const TF = [
+ {
+  "s": "他答應媽媽不玩手機，卻偷偷躲在棉被裡玩，真是陽奉陰違。",
+  "a": true,
+  "why": "表面答應、實際上不照做，用得正確！"
+ },
+ {
+  "s": "小華答應幫忙倒垃圾，馬上就去做了，真是陽奉陰違。",
+  "a": false,
+  "why": "說到做到是「表裡如一」，不是陽奉陰違。"
+ },
+ {
+  "s": "老師嘔心瀝血的準備教材，就是希望我們學得更好。",
+  "a": true,
+  "why": "費盡心思、用盡心血，用得正確！"
+ },
+ {
+  "s": "他隨便寫了五分鐘就交出作文，真是嘔心瀝血之作。",
+  "a": false,
+  "why": "隨便寫寫是「敷衍了事」，不是嘔心瀝血。"
+ },
+ {
+  "s": "戰爭讓許多人失去家園，到處哀鴻遍野，令人難過。",
+  "a": true,
+  "why": "到處都是失去家園的難民，用得正確！"
+ },
+ {
+  "s": "國家富強，人民生活快樂，到處哀鴻遍野。",
+  "a": false,
+  "why": "人民生活快樂是「國泰民安」，正好相反。"
+ },
+ {
+  "s": "這次選拔沒被選上，他臥薪嘗膽，努力練習，準備明年再挑戰。",
+  "a": true,
+  "why": "刻苦自勵、奮發圖強，用得正確！"
+ },
+ {
+  "s": "考試考差了，他從此每天打電動不再讀書，真是臥薪嘗膽。",
+  "a": false,
+  "why": "放棄努力不是奮發圖強，「臥薪嘗膽」是刻苦自勵。"
+ },
+ {
+  "s": "因為熬夜生病，他痛定思痛，決定以後每天早點睡覺。",
+  "a": true,
+  "why": "吸取教訓、警惕未來，用得正確！"
+ },
+ {
+  "s": "他上次闖紅燈差點被車撞，痛定思痛後，今天又闖紅燈了。",
+  "a": false,
+  "why": "再犯同樣的錯是「重蹈覆轍」，沒有痛定思痛。"
+ }
+];
+
+
+/* ===================== 小工具 ===================== */
+const $app = document.getElementById("app");
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = (a,n) => shuffle(a).slice(0,n);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let soundOn = true;
+function toggleSound(){ soundOn=!soundOn; document.getElementById("soundBtn").textContent = soundOn?"🔊 音效開":"🔇 音效關"; }
+let actx;
+function beep(ok){
+  if(!soundOn) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const notes = ok ? [660,880] : [300,220];
+    notes.forEach((f,i)=>{
+      const o=actx.createOscillator(), g=actx.createGain();
+      o.type = ok?"sine":"square"; o.frequency.value=f;
+      g.gain.setValueAtTime(.12, actx.currentTime+i*.12);
+      g.gain.exponentialRampToValueAtTime(.001, actx.currentTime+i*.12+.2);
+      o.connect(g); g.connect(actx.destination); o.start(actx.currentTime+i*.12); o.stop(actx.currentTime+i*.12+.22);
+    });
+  }catch(e){}
+}
+function speak(t){
+  if(!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t); u.lang="zh-TW"; u.rate=.8;
+  const v = speechSynthesis.getVoices().find(v=>/zh[-_]TW/i.test(v.lang)); if(v) u.voice=v;
+  speechSynthesis.speak(u);
+}
+function confetti(){
+  const em=["🎉","⭐","🌟","🎊","✨"];
+  for(let i=0;i<30;i++){
+    const d=document.createElement("div"); d.className="confetti";
+    d.textContent=em[i%em.length]; d.style.left=Math.random()*100+"vw";
+    d.style.animationDuration=(1.8+Math.random()*1.8)+"s"; d.style.animationDelay=(Math.random()*.6)+"s";
+    document.body.appendChild(d); setTimeout(()=>d.remove(),4500);
+  }
+}
+const BEST_KEY="idiomGame_"+LESSON_ID+"_best";
+const getBest = () => { try{return JSON.parse(localStorage.getItem(BEST_KEY))||{};}catch(e){return {};} };
+function saveBest(mode,stars){ const b=getBest(); if(!b[mode]||stars>b[mode]){ b[mode]=stars; try{localStorage.setItem(BEST_KEY,JSON.stringify(b));}catch(e){} } }
+const starStr = n => "⭐".repeat(n)+"☆".repeat(3-n);
+
+/* ===================== 選單 ===================== */
+const MODES = [
+  {id:"learn", ic:"📖", t:"成語小卡", d:"點卡片翻面，看注音、解釋、近反義詞和例句，還可以聽發音。"},
+  {id:"meaning", ic:"🎯", t:"看解釋猜成語", d:"讀解釋，選出正確的成語。"},
+  {id:"reverse", ic:"💡", t:"看成語選解釋", d:"看到成語，選出正確的意思。"},
+  {id:"match", ic:"🔗", t:"配對連連看", d:"把成語和它的解釋配成一對，比比看誰最快！"},
+  {id:"fill", ic:"✏️", t:"例句填空", d:"句子缺了一個成語，選出最適合的。"},
+  {id:"order", ic:"🔤", t:"成語排排看", d:"看解釋，按順序點出正確的四個字（小心陷阱字）。"},
+  {id:"char", ic:"🔍", t:"生字找找看", d:"成語缺了一個字，從長得像、念起來像的字中找出正確的。"},
+  {id:"syn", ic:"⚖️", t:"近義反義大考驗", d:"找出成語的近義詞或反義詞。"},
+  {id:"tf", ic:"✅", t:"用對了嗎？", d:"判斷句子裡的成語用得對不對。"},
+  {id:"mix", ic:"🏆", t:"綜合大挑戰", d:"各種題型隨機混合 12 題，挑戰三顆星！", big:true}
+];
+function goMenu(){
+  speechSynthesis && speechSynthesis.cancel && speechSynthesis.cancel();
+  const best=getBest();
+  $app.innerHTML = `
+    <div class="intro">👋 今天要闖關的五個成語：
+      <div class="chips">${W.map(w=>`<span class="chip">${w}</span>`).join("")}</div>
+      <div style="margin-top:10px;font-size:15px">📚 其他課：${LESSONS.map(l=>l.id===LESSON_ID?`<b style="color:var(--pri)">${l.short}</b>`:`<a href="${l.file}" style="color:var(--blue)">${l.short}</a>`).join("　")}</div>
+    </div>
+    <div class="menu">${MODES.map(m=>`
+      <button class="mbtn ${m.big?"big":""}" onclick="start('${m.id}')">
+        ${m.id!=="learn"&&best[m.id]!=null?`<span class="best">${starStr(best[m.id])}</span>`:""}
+        <div class="ic">${m.ic}</div><h3>${m.t}</h3><p>${m.d}</p>
+      </button>`).join("")}
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+/* ===================== 題目產生 ===================== */
+function distract(ans,n=3){ return pick(W.filter(w=>w!==ans),n); }
+function genMeaning(){ return shuffle(IDIOMS).map(x=>({type:"看解釋猜成語", html:`「${esc(x.m)}」<br>這是哪一個成語？`, a:x.w, o:shuffle([x.w,...distract(x.w)]), exp:`${x.w}：${x.m}`})); }
+function genReverse(){ return shuffle(IDIOMS).map(x=>{
+  const others = pick(IDIOMS.filter(y=>y.w!==x.w),3).map(y=>y.m);
+  return {type:"看成語選解釋", html:`「<span class="hl">${x.w}</span>」是什麼意思？`, a:x.m, o:shuffle([x.m,...others]), small:true, exp:`${x.w}：${x.m}`};
+}); }
+function genFill(n=6){ return pick(FILL,n).map(f=>({type:"例句填空・"+f.src, html:esc(f.s).replace(f.a,'<span class="blank">？</span>'), a:f.a, o:shuffle([f.a,...distract(f.a)]), exp:f.s})); }
+function genChar(n=6){ return pick(CHARQ,n).map(c=>{
+  const chars=[...c.w]; const ans=chars[c.i]; chars[c.i]='<span class="blank" style="min-width:60px">？</span>';
+  return {type:"生字找找看", html:`選出正確的字：<br><span style="font-size:42px;letter-spacing:6px">${chars.join("")}</span><br><span style="font-size:18px;color:var(--sub)">提示：${byW(c.w).m}</span>`, a:ans, o:shuffle(c.opts), exp:`正確寫法是「${c.w}」。`};
+}); }
+function genSyn(){ return shuffle(SYN).map(s=>({type:"近義反義大考驗", html:`「<span class="hl">${s.q}</span>」的<span style="color:${s.t==="近"?"var(--blue)":"var(--bad)"}">${s.t}義詞</span>是哪一個？`, a:s.a, o:shuffle(s.o), exp:[s.q, byW(s.q).near&&("近義："+byW(s.q).near), byW(s.q).anti&&("反義："+byW(s.q).anti)].filter(Boolean).join("　")})); }
+function genTF(n=8){ return pick(TF,n).map(t=>({type:"用對了嗎？", html:`${esc(t.s)}<br><span style="font-size:20px;color:var(--sub)">這句話的成語用得對嗎？</span>`, a:t.a?"⭕ 用對了":"❌ 用錯了", o:["⭕ 用對了","❌ 用錯了"], exp:t.why})); }
+function genOrder(){ return shuffle(IDIOMS).map(x=>({kind:"order", type:"成語排排看", w:x.w, m:x.m})); }
+
+/* ===================== 一般測驗引擎 ===================== */
+let G=null;
+function start(mode){
+  if(mode==="learn") return learn();
+  if(mode==="match") return matchGame();
+  const titles=Object.fromEntries(MODES.map(m=>[m.id,m.ic+" "+m.t]));
+  let qs;
+  switch(mode){
+    case "meaning": qs=genMeaning(); break;
+    case "reverse": qs=genReverse(); break;
+    case "fill": qs=genFill(); break;
+    case "char": qs=genChar(); break;
+    case "syn": qs=genSyn(); break;
+    case "tf": qs=genTF(); break;
+    case "order": qs=genOrder(); break;
+    case "mix": qs=shuffle([...pick(genMeaning(),2),...pick(genReverse(),1),...pick(genFill(),2),...pick(genChar(),2),...pick(genSyn(),2),...pick(genTF(),2),...pick(genOrder(),1)]); break;
+  }
+  G={mode, title:titles[mode], qs, i:0, score:0, wrong:[]};
+  renderQ();
+}
+function header(){
+  return `<div class="bar"><button class="back" onclick="goMenu()">← 回選單</button><h2>${G.title}</h2><span class="sp"></span>
+    <span class="pill">第 ${G.i+1} / ${G.qs.length} 題</span><span class="pill">得分 ${G.score}</span></div>
+    <div class="prog"><i style="width:${G.i/G.qs.length*100}%"></i></div>`;
+}
+function renderQ(){
+  if(G.i>=G.qs.length) return finish();
+  const q=G.qs[G.i];
+  if(q.kind==="order") return renderOrder(q);
+  $app.innerHTML = header()+`<div class="qcard">
+    <span class="qtype">${q.type}</span>
+    <div class="qtext">${q.html}</div>
+    <div class="opts" ${q.o.length===2?'':''}>${q.o.map((o,k)=>`<button class="opt" data-k="${k}" style="${q.small?"font-size:19px;line-height:1.5;text-align:left;padding:14px 16px":""}">${esc(o)}</button>`).join("")}</div>
+    <div id="fb"></div></div>`;
+  $app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(b,q));
+}
+function answer(btn,q){
+  const pickVal=q.o[+btn.dataset.k], ok = pickVal===q.a;
+  $app.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(q.o[+b.dataset.k]===q.a) b.classList.add("ok"); });
+  if(!ok) btn.classList.add("bad");
+  beep(ok);
+  if(ok) G.score++; else G.wrong.push(q.exp);
+  // 填空題答完把句子補完整
+  const qt=$app.querySelector(".qtext .blank"); if(qt){ qt.textContent=q.a; qt.style.color=ok?"var(--ok)":"var(--bad)"; }
+  document.getElementById("fb").innerHTML = `<div class="fb ${ok?"ok":"bad"}">${ok?"🎉 答對了！":"😅 再想想，正確答案是「"+esc(q.a)+"」"}<br>📌 ${esc(q.exp)}</div>
+    <button class="next" onclick="G.i++;renderQ()">${G.i+1<G.qs.length?"下一題 →":"看結果 🏁"}</button><div class="clear"></div>`;
+}
+
+/* 排排看 */
+function renderOrder(q){
+  const target=[...q.w];
+  const decoyPool=[...new Set(CHARQ.flatMap(c=>c.opts).filter(c=>!target.includes(c)))];
+  const tiles=shuffle([...target,...pick(decoyPool,2)]);
+  const st={filled:[], tiles, mistakes:0};
+  const draw=()=>{
+    $app.innerHTML = header()+`<div class="qcard center">
+      <span class="qtype">成語排排看</span>
+      <div class="qtext" style="font-size:24px">提示：「${esc(q.m)}」</div>
+      <div class="slots">${target.map((c,k)=>`<div class="slot ${st.filled[k]!=null?"ok":""}">${st.filled[k]!=null?tiles[st.filled[k]]:""}</div>`).join("")}</div>
+      <div class="tiles">${tiles.map((c,k)=>`<button class="tile" data-k="${k}" ${st.filled.includes(k)||st.done?"disabled":""}>${c}</button>`).join("")}</div>
+      <div id="fb"></div></div>`;
+    $app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k, need=target[st.filled.length];
+      if(tiles[k]===need){ st.filled.push(k); if(st.filled.length===4){ st.done=true; } draw(); if(st.done) doneOrder(); }
+      else { st.mistakes++; beep(false); b.classList.add("wrong"); b.style.borderColor="var(--bad)"; setTimeout(()=>{b.style.borderColor="";},400);
+        if(st.mistakes>=3){ st.done=true; st.filled=target.map(c=>tiles.indexOf(c)); draw(); doneOrder(); } }
+    });
+  };
+  const doneOrder=()=>{
+    const ok=st.mistakes<3;
+    if(ok) G.score++; else G.wrong.push(`${q.w}：${q.m}`);
+    beep(ok); if(soundOn) speak(q.w);
+    document.getElementById("fb").innerHTML=`<div class="fb ${ok?"ok":"bad"}">${ok?(st.mistakes===0?"🎉 完美！一次就排對！":"👍 排好了！"):"😅 錯了三次，答案是「"+q.w+"」，再多看幾次喔！"}<br>📌 ${q.w}：${esc(q.m)}</div>
+      <button class="next" onclick="G.i++;renderQ()">${G.i+1<G.qs.length?"下一題 →":"看結果 🏁"}</button><div class="clear"></div>`;
+  };
+  draw();
+}
+
+function finish(){
+  const n=G.qs.length, s=G.score, r=s/n;
+  const stars = r===1?3: r>=.7?2: r>=.4?1:0;
+  saveBest(G.mode,stars);
+  if(stars>=2) confetti();
+  const msg = ["再練習一次，你一定可以的！💪","不錯喔，繼續加油！","很棒！差一點就滿分了！","太厲害了！你是成語小達人！🏅"][stars];
+  $app.innerHTML=`<div class="qcard result">
+    <div class="stars">${starStr(stars)}</div>
+    <h2>${msg}</h2><p>答對 ${s} / ${n} 題</p>
+    ${G.wrong.length?`<div class="review"><b>📝 再複習一下：</b><br>${G.wrong.map(w=>"・"+esc(w)).join("<br>")}</div>`:""}
+    <div class="rbtns"><button class="a" onclick="start('${G.mode}')">🔁 再玩一次</button><button class="b" onclick="goMenu()">🏠 回選單</button></div></div>`;
+  window.scrollTo(0,0);
+}
+
+/* ===================== 學習卡 ===================== */
+function learn(){
+  $app.innerHTML=`<div class="bar"><button class="back" onclick="goMenu()">← 回選單</button><h2>📖 成語小卡</h2><span class="sp"></span><span class="pill">點卡片翻面</span></div>
+  <div class="cards">${IDIOMS.map((x,k)=>`
+    <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fin">
+      <div class="face front"><div class="idiom">${x.w}</div><div class="zy">${x.zy}</div>
+        <button class="say" onclick="event.stopPropagation();speak('${x.w}')">🔈 聽發音</button></div>
+      <div class="face back">
+        <div><b>解釋：</b>${x.m}</div>
+        ${x.near?`<div style="margin-top:6px"><span class="tagn n">近</span>${x.near}　<span class="tagn f">反</span>${x.anti}</div>`:""}
+        <div style="margin-top:6px"><b>例句：</b>${x.ex.replace(x.w,`<u>${x.w}</u>`)}</div>
+        <button class="say" onclick="event.stopPropagation();speak('${x.w}。${x.m}${x.ex}')">🔈 念給我聽</button>
+      </div></div></div>`).join("")}
+  </div>`;
+}
+
+/* ===================== 配對連連看 ===================== */
+function matchGame(){
+  const L=shuffle(IDIOMS), R=shuffle(IDIOMS);
+  const st={sel:null, done:new Set(), miss:0, t0:Date.now()};
+  $app.innerHTML=`<div class="bar"><button class="back" onclick="goMenu()">← 回選單</button><h2>🔗 配對連連看</h2><span class="sp"></span>
+    <span class="pill" id="mt">⏱ 0 秒</span><span class="pill" id="mm">失誤 0 次</span></div>
+    <div class="intro" style="font-size:16px">先點左邊的成語，再點右邊相符的解釋（也可以先點右邊）。</div>
+    <div class="match"><div class="col">${L.map(x=>`<button class="mc L" data-w="${x.w}" data-s="L">${x.w}</button>`).join("")}</div>
+    <div class="col">${R.map(x=>`<button class="mc R" data-w="${x.w}" data-s="R">${x.m}</button>`).join("")}</div></div><div id="fb"></div>`;
+  const timer=setInterval(()=>{ const el=document.getElementById("mt"); if(!el) return clearInterval(timer); el.textContent=`⏱ ${Math.floor((Date.now()-st.t0)/1000)} 秒`; },500);
+  $app.querySelectorAll(".mc").forEach(b=>b.onclick=()=>{
+    if(b.classList.contains("done")) return;
+    if(!st.sel || st.sel.dataset.s===b.dataset.s){ $app.querySelectorAll(".mc.sel").forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); st.sel=b; return; }
+    const a=st.sel; st.sel=null; a.classList.remove("sel");
+    if(a.dataset.w===b.dataset.w){
+      a.classList.add("done"); b.classList.add("done"); st.done.add(a.dataset.w); beep(true);
+      if(st.done.size===IDIOMS.length){
+        clearInterval(timer);
+        const sec=Math.floor((Date.now()-st.t0)/1000);
+        const stars=st.miss===0?3:st.miss<=2?2:st.miss<=4?1:0;
+        saveBest("match",stars); if(stars>=2) confetti();
+        G={mode:"match"};
+        document.getElementById("fb").innerHTML=`<div class="qcard result" style="margin-top:18px"><div class="stars">${starStr(stars)}</div>
+          <h2>全部配對完成！</h2><p>花了 ${sec} 秒，失誤 ${st.miss} 次</p>
+          <div class="rbtns"><button class="a" onclick="matchGame()">🔁 再玩一次</button><button class="b" onclick="goMenu()">🏠 回選單</button></div></div>`;
+        document.getElementById("fb").scrollIntoView({behavior:"smooth"});
+      }
+    } else {
+      st.miss++; beep(false); document.getElementById("mm").textContent=`失誤 ${st.miss} 次`;
+      [a,b].forEach(x=>{x.classList.remove("wrong"); void x.offsetWidth; x.classList.add("wrong");});
+    }
+  });
+}
+
+goMenu();
+</script>
+</body>
+</html>
